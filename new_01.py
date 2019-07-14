@@ -2,11 +2,8 @@
 ##了解html的基本结构、解析方法、以及实现基本的网页爬取~
 #html版本
 '''
-1.网站的基本结构：（chrome的基本使用方法）
-
-2.需要用到的库：
-
-3.开始实践吧
+1. 改用pandas.io.json的json_normalize工具来格式化网站爬取的json数据
+2. 使用pandas 中 Conncat工具来拼接前后两个番剧表
 
 '''
 
@@ -16,19 +13,18 @@ import json
 import re
 import pandas as pd 
 import numpy as np 
-import sh
+from pandas.io.json import json_normalize
 
-base_url = "https://bangumi.bilibili.com/media/web_api/search/result?"
-
-headers = {
-     'Host':'bangumi.bilibili.com',
-     'Referer':'https://www.bilibili.com/anime/index/',
-     'User_Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36',
-     'Origin': 'https://www.bilibili.com',
-}
 
 def get_page(page):
     #参数
+    base_url = "https://bangumi.bilibili.com/media/web_api/search/result?"
+    headers = {
+        'Host':'bangumi.bilibili.com',
+        'Referer':'https://www.bilibili.com/anime/index/',
+        'User_Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36',
+        'Origin': 'https://www.bilibili.com',
+    }
     params = {
         'season_version':'-1',
         'area': '-1',
@@ -55,21 +51,25 @@ def get_page(page):
     except urllib2.URLError as e:
         print('Error',e.args)
 
-# def parse_one_page(html):
-#     # pattern_title = re.compile('"title":"(.*?)"',re.S)
-#     # result = re.findall(pattern_title,html)
-#     # return result
+
 def parse_one_page(json):
     if json:
         items = json.get('result').get('data')
+        items = json_normalize(items)
         web_data = pd.DataFrame(items)
-        web_data2 = web_data[['title','media_id','season_id','Order.score','Order.follow','Order.play']]
-        # index = 0
-        # for item in items:
-        #     web_data3 = pd.DataFrame(item['order'])
-            # ret[1] = item['season_id']
-            # ret[2] = item['media_id']
-    return web_data2
+    #print web_data
+    return web_data
 
-print '中文'
-print parse_one_page(get_page(1))
+def main():
+    for i in range(1,14):   
+        if i == 1:
+            global data
+            data =  parse_one_page(get_page(i)) 
+        else:
+            data = pd.concat([data,parse_one_page(get_page(i))],ignore_index=True)
+    pass #对data数据进行筛选，以及列的重命名，然后写入数据库
+    print data
+
+if __name__ == "__main__":
+    print '开始运行'
+    main()
