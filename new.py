@@ -1,4 +1,6 @@
-#了解html的基本结构、解析方法、以及实现基本的网页爬取~
+# -*- coding: utf-8 -*-
+##了解html的基本结构、解析方法、以及实现基本的网页爬取~
+#html版本
 '''
 1.网站的基本结构：（chrome的基本使用方法）
 
@@ -7,11 +9,13 @@
 3.开始实践吧
 
 '''
-#conding = utf-8
+
 import urllib,urllib2
 import requests
 import json
 import re
+import pandas as pd 
+import numpy as np 
 
 base_url = "https://bangumi.bilibili.com/media/web_api/search/result?"
 
@@ -40,35 +44,32 @@ def get_page(page):
         'season_type':'1',
         'pagesize':'20'
         }
-    #url = base_url + urllib.urlencode(params)
     url = base_url
     try:
-        # request = urllib2.Request(url,headers=headers)
         response = requests.get(url,headers=headers,params=params,allow_redirects=False)
-        #将内容解析为json格式返回
-        # myjson = json.loads(response.json())
-        # newjson = json.dumps(myjson,ensure_ascii=False)
-        # return newjson
-        # response.encoding = "utf-8"
-        # myjson = json.loads(response.json(),encoding='utf-8')
-        newjson = json.dumps(response.json(),ensure_ascii=False)#使json中的中文可以正确的显示,但返回的是一个str格式的数据
-        # myjson = json.loads(newjson,encoding='utf-8')
-        result = re.findall('"title": "(.*?)"',newjson,re.S)
-        return result
-        # return response.text
-        # return response.status_code
-        # return response.cookies
+        response.json()
+        myjson = json.dumps(response.json(),ensure_ascii=False)
+        newjson = json.loads(myjson)
+        return newjson
     except urllib2.URLError as e:
         print('Error',e.args)
 
+# def parse_one_page(html):
+#     # pattern_title = re.compile('"title":"(.*?)"',re.S)
+#     # result = re.findall(pattern_title,html)
+#     # return result
+def parse_one_page(json):
+    if json:
+        items = json.get('result').get('data')
+        web_data = pd.DataFrame(items)
+        web_data2 = web_data[['title','media_id','season_id','order']]
+        web_data3 = web_data[['order']]
+        # index = 0
+        # for item in items:
+        #     web_data3 = pd.DataFrame(item['order'])
+            # ret[1] = item['season_id']
+            # ret[2] = item['media_id']
+    return web_data2
 
-# response = urllib.urlopen('https://cuiqingcai.com/947.html')
 print '中文'
-# print response.read()
-# print type(response)
-# request = urllib2.Request('https://cuiqingcai.com/947.html')
-# response2 = urllib2.urlopen(request)
-# print response2.read()
-
-
-print get_page(1)
+print parse_one_page(get_page(1))
