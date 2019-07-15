@@ -13,3 +13,4 @@ cursor.execute('SELECT VERSION()')
 data = cursor.fetchone()
 print('Database version:',data)
 db.close()
+

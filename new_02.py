@@ -70,9 +70,11 @@ def main():
     #pass #对data数据进行筛选，以及列的重命名，然后写入数据库
     data = data[['title','media_id','season_id','order.score','order.follow','order.play']]
     data = data.rename(columns={'order.score':'score','order.follow':'follow_num','order.play':'play_num'})
-    data.to_csv('data_test.csv',encoding= 'utf-8')
+    data.to_csv('data_test_2.csv',encoding= 'utf-8')
     print data
 
 if __name__ == "__main__":
     print '开始运行'
     main()
+
+#下一步要学会把数据实时地存到数据库里面
