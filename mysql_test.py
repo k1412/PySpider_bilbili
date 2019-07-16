@@ -29,9 +29,10 @@ pd_testFile_2 = pd.read_csv('data_test_2.csv')
 # pd_testFile_2.rename_axis(None)
 print pd_testFile_1
 pd_testFile_1.to_sql(
-name = 'test3',
+name = 'test7',
 con = engine,
 if_exists = 'append',
+index= False,
 dtype={'title':sqlalchemy.types.VARCHAR(length=255),
         'media_id':sqlalchemy.types.INTEGER(),
         'season_id':sqlalchemy.types.INTEGER(),
@@ -41,9 +42,10 @@ dtype={'title':sqlalchemy.types.VARCHAR(length=255),
     }
 )
 pd_testFile_2.to_sql(
-name = 'test3',
+name = 'test7',
 con = engine,
 if_exists = 'append',
+index=False,
 dtype={'title':sqlalchemy.types.VARCHAR(length=255),
         'media_id':sqlalchemy.types.INTEGER(),
         'season_id':sqlalchemy.types.INTEGER(),
@@ -52,3 +54,10 @@ dtype={'title':sqlalchemy.types.VARCHAR(length=255),
         'play_num':sqlalchemy.types.VARCHAR(length=255)
     }
 )
+'''
+尝试了将CSV通过pandas中的数据库组件上传到sql远端数据库：
+问题：
+1. 会将dataframe中未命名的index以unnamed :0的形式保存到第一列，后期引起前面索引的重复，因为在读取sql时，pandas会再为数据增加一个index，所以在数据库中索引暂时的没有用的
+2.推荐配置，dataframe不保留index列，或者不进行处理
+index = False
+'''
