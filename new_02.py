@@ -59,7 +59,7 @@ def parse_one_page(json):
     return web_data
 
 def main():
-    for i in range(1,147):   
+    for i in range(1,3):   
         if i == 1:
             global data
             data =  parse_one_page(get_page(i)) 
