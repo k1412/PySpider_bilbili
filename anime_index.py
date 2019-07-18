@@ -1,3 +1,4 @@
+#coding=UTF-8
 import pandas as pd 
 import numpy as np 
 
@@ -8,7 +9,6 @@ index_data = index_data.T
 index_data = np.sort(index_data)
 index_data = index_data[0]
 index_data_size = index_data.size
-print index_data
 
 def anime_index(season_id):
     '''
@@ -17,5 +17,8 @@ def anime_index(season_id):
     index = np.where(index_data == season_id)
     return index[0][0]
 
-
-print anime_index(28077)
+def has_anime_index(season_id):
+    '''
+    输入season_id 返回其是否存在于数组中
+    '''
+    return season_id in index_data
