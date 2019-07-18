@@ -1,10 +1,11 @@
 '''
-爬取哔哩哔哩个人用户的追番信息
+还需要完成的工作：
+使用代理池，爬取一定数量的网页后，更换代理IP
 
-已经实现了爬取特定ID用户的追番信息---单个
-还需要把他转化为一个一位的布尔值
+判断爬取失败的标志？？？相应时间怎么算？？
 
-解决连续爬取被封禁的问题
+爬取一定次数后，将数据保存到数据库
+捷键代理池中代理检测的一些方法
 '''
 import pymysql
 import pandas as pd 
@@ -129,37 +130,14 @@ def user_information_spider():
                 anime_list = pd.concat([anime_list,anime_list_new],ignore_index=True)
             np.savetxt('boolData.csv',single_data,delimiter = ',')
             useful_num+=1
-    print anime_list
+            if useful_num == 30:
+                break   
+    print anime_list,useful_num
     anime_list.to_sql(
         name = 'test8',
         con = engine,
         if_exists = 'append',
         index= False
-        )
+    )
 
 user_information_spider()
-'''
-还需要完成的工作：
-1. 如何构造用户VMID???
-2. 判断并跳过无效的爬取？？？？
-3. 选取读取成功的爬取。。。
-
-"total":0 时，所爬取的用户没有追番信息？？？？？
-
-爬取到的信息如何保存？？
-p. numpy数组？？？
-1. 构造稀疏数组
-2. 上传
-
-'''
-'''
-还需要完成的工作：
-使用代理池，爬取一定数量的网页后，更换代理IP
-
-判断爬取失败的标志？？？相应时间怎么算？？
-
-爬取一定次数后，将数据保存到数据库
-
-捷键代理池中代理检测的一些方法
-
-'''
