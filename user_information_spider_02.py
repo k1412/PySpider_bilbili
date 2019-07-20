@@ -89,7 +89,7 @@ def parse_one_page(json):
         web_data = pd.DataFrame(items)
         web_data = web_data[['season_id']]
         web_data.to_csv('data_test_100.csv',encoding= 'utf-8')
-        web_data = web_data.to_numpy()
+        #web_data = web_data.to_numpy()
         web_data = web_data.T 
         web_data = web_data[0]
     return web_data
@@ -130,14 +130,15 @@ def user_information_spider():
                 anime_list = pd.concat([anime_list,anime_list_new],ignore_index=True)
             np.savetxt('boolData.csv',single_data,delimiter = ',')
             useful_num+=1
-            if useful_num == 30:
+            if useful_num == 10:
                 break   
     print anime_list,useful_num
-    anime_list.to_sql(
-        name = 'test8',
-        con = engine,
-        if_exists = 'append',
-        index= False
-    )
+    # #原本计划将结果转换为数组然后传入数据库看来是不可以啊
+    # anime_list.to_sql(
+    #     name = 'test8',
+    #     con = engine,
+    #     if_exists = 'append',
+    #     index= False
+    # )
 
 user_information_spider()
