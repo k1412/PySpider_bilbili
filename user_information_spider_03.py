@@ -114,9 +114,9 @@ def user_information_spider():
     #用一个while循环代替
     useful_num = 0    #将有用信息数量当作终止循环的条件
     invalid_num = 0
-    vmid = 2415         #开始爬取的id 1/ 2415
+    vmid = 7358         #开始爬取的id 1/ 2415/ 4912/ 7357
 
-    while(useful_num<1000):#目标是一万个哇
+    while(useful_num<2000):#目标是一万个哇
         #无效id大量集中出现时，对vmid进行大范围跳过
         if invalid_num >= 100:
             vmid+=200000

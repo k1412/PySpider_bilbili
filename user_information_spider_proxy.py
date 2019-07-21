@@ -141,15 +141,21 @@ def user_information_spider():
     generate_pd_flag = 1
     #用一个while循环代替
     useful_num = 0    #将有用信息数量当作终止循环的条件
+    invalid_num = 0
     vmid = 1          #开始爬取的id
     while(useful_num<20):#目标是一万个哇
+        if invalid_num >= 100:
+            vmid+=200000
         total,code,web_source_data = get_size_code(vmid,proxies)    #web_source_data是从网站获取的json文件
         if not (code and total>0):  #如果code值为flase就跳过这一vmid
             vmid+=1
+            invalid_num+=1
             continue
         #single_data = np.zeros(2903, dtype=bool)      #新建一个数组，准备接受返回材料
         single_data = np.zeros(2903)      #新建一个数组，准备接受返回材料
-                                                   #保存vmid
+        invalid_num = 0
+        vmid_list = pd.Series(vmid)       #保存vmid
+        vmid_list.to_csv('vmid_list.csv',mode='a',index=False,header= False)                                                  #保存vmid
         global web_data
         web_data = parse_one_page(web_source_data)     
         total-=50
